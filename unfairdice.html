@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dice Roll Simulator: z-Scores with Dice?</title>
+  <title>Dice Roll Simulator</title>
   <style>
+p {text-align: center;}
     .dice {
       width: 100px;
       height: 100px;
@@ -21,6 +22,12 @@
       font-size: 24px;
       margin-top: 20px;
     }
+
+table, th, td {
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid black;
+}
 
     .bar-graph {
       display: flex;
@@ -85,9 +92,10 @@
   </style>
 </head>
 <body>
-  <h1><center>Dice Roll Simulator: z-Scores with Dice?</center></h1>
-<p><b><center>HOMEPAGE</center></b></p>
-  <div class="dice" id="dice"></div>
+  <h1><center>Dice Roll Simulator: z-Scores with Dice?<center></h1>
+
+<p><b><big>QUESTIONABLE DICE #1</big></b></p>
+ <div class="dice" id="dice"></div>
   <div class="counter">
     Number of Times Rolled: <span id="counter">0</span>
     <br>
@@ -129,9 +137,32 @@
   <div class="unusual-result" id="unusual-result"></div>
 
   <script>
-    // Function to generate a random number between 1 and 6
+    // Array to store loaded die probabilities
+    var loadedProbabilities = [];
+
+    // Function to generate random loaded probabilities
+    function generateLoadedProbabilities() {
+      loadedProbabilities = [
+        { number: 1, probability: 0.10 },
+        { number: 2, probability: 0.10 },
+        { number: 3, probability: 0.15 },
+        { number: 4, probability: 0.175 },
+        { number: 5, probability: 0.20 },
+        { number: 6, probability: 0.275 }
+      ];
+    }
+
+    // Function to generate a random number based on loaded probabilities
     function rollDice() {
-      return Math.floor(Math.random() * 6) + 1;
+      var randomNumber = Math.random();
+      var cumulativeProbability = 0;
+
+      for (var i = 0; i < loadedProbabilities.length; i++) {
+        cumulativeProbability += loadedProbabilities[i].probability;
+        if (randomNumber < cumulativeProbability) {
+          return loadedProbabilities[i].number;
+        }
+      }
     }
 
     // Function to update the counter and bar graph based on the rolled number
@@ -170,7 +201,8 @@
       }, 500);
     }
 
-function calculateStats() {
+    // Function to calculate the mean and standard deviation
+    function calculateStats() {
       var counterElement = document.getElementById('counter');
       var counter = parseInt(counterElement.textContent);
       mean = counter / 6;
@@ -205,7 +237,7 @@ function calculateStats() {
 
       var mean = parseFloat(meanElement.textContent);
       var standardDeviation = parseFloat(standardDeviationElement.textContent);
-      var zScore = (mean - 3.5) / (standardDeviation);
+      var zScore = (mean - 3.5) / standardDeviation;
 
       if (zScore < 0.25 && zScore > -0.25) {
         unusualResultElement.textContent = "No, this is not an unusual distribution and the dice seems fair." + " " + zScore;
@@ -236,13 +268,15 @@ function calculateStats() {
       });
     }
 
+    // Generate initial loaded probabilities
+    generateLoadedProbabilities();
+
     // Event listener for the roll button
     var rollButton = document.getElementById('roll-button');
     rollButton.addEventListener('click', rollDiceAnimation);
 
     // Event listener for the unusual button
     var unusualButton = document.getElementById('unusual-button');
-calculateStats();
     unusualButton.addEventListener('click', checkUnusualDistribution);
 
     // Event listener for the reset button
@@ -252,19 +286,40 @@ calculateStats();
 
 <br>
 <br>
+<br>
+<br>
+<p1><bold><b><center>Scroll down to see the solution!</center></b></bold></p1>
+<p style="margin:200px";
 
-<center><a href="unfairdice.html">Questionable Dice #1</a></center>
+
+<p><big><b><center>Hey... you're getting pretty lucky! This die is definitely rigged, and given enough trials it's pretty easy to see that. Because our data is skewed to the left over time, our z-Score calculation picks up on that and our z-Score's absolute value increases. This site is programmed to pick up on z-Scores less than -0.25 and greater than 0.25, but in real practice that doesn't grant us much certainty at all (although for this dorky little site it serves its purpose well enough). </center></b></big></p>
 
 <br>
 <br>
-
-<center><a href="unfairdice2.html">Questionable Dice #2</a></center>
-
 <br>
 <br>
 
-<center><a href="unfairdice3.html">Questionable Dice #3</a></center>
+<table class="center">
+  <tr class="row">
+    <td  style="text-align: center">1</td>
+    <td style="text-align: center">2</td>
+    <td style="text-align: center">3</td>
+<td style="text-align: center">4</td>
+<td style="text-align: center">5</td>
+<td style="text-align: center">6</td>
+  </tr>
+  <tr class="row">
+    <td style="text-align: center">10%</td>
+    <td style="text-align: center">10%</td>
+    <td style="text-align: center">15%</td>
+	<td style="text-align: center">17.5%</td>
+    <td style="text-align: center">20%</td>
+    <td style="text-align: center">27.5%</td>
+  </tr>
+</table>
 
+<br>
+<br>
 <br>
 <br>
 
